@@ -92,7 +92,7 @@ if match:
 		width = max_value + 1 - min_value	# Width of window data associated with the specified label
 
 		# This is to prevent output that is too wide from wrapping to the next line.
-		if width > terminal_window_width:
+		if width > (terminal_window_width)-1:
 			print("Output is too wide for the terminal window, so it will not be printed.")
 			no_print = True
 		else:
