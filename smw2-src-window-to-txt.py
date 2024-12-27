@@ -27,13 +27,14 @@ def save_file(path, address, data):
 		print('ERROR: Failed to open file.')
 		exit()
 
-parser = argparse.ArgumentParser(prog="smw2-src-window-to-txt", formatter_class=argparse.RawDescriptionHelpFormatter, description="Yoshi's Island Source Window Data to Text Art Converter\nBy Mattrizzle - https://github.com/Mattrizzle/smw2-src-window-to-txt\nThis script converts a window table from a Yoshi's Island source code ASM file \nto an 'ASCII art'-style text file. Additionally, it prints this output to the \nterminal window if it fits.", epilog="Examples:\n  smw2-src-window-to-txt.py ys_play.asm.BAK1 CCHGD0\n  smw2-src-window-to-txt.py ys_game.asm.BAK11 CHGDT4 -f O -b _ -o \"boo.txt\"\n  smw2-src-window-to-txt.py ys_koopa.asm KOOPA_WINDOW_DT -f * -i")
+parser = argparse.ArgumentParser(prog="smw2-src-window-to-txt", formatter_class=argparse.RawDescriptionHelpFormatter, description="Yoshi's Island Source Window Data to Text Art Converter\nBy Mattrizzle - https://github.com/Mattrizzle/smw2-src-window-to-txt\nThis script converts a window table from a Yoshi's Island source code ASM file \nto an 'ASCII art'-style text file. Additionally, it prints this output to the \nterminal window if it fits.", epilog="Examples:\n  smw2-src-window-to-txt.py ys_play.asm.BAK1 CCHGD0\n  smw2-src-window-to-txt.py ys_game.asm.BAK11 CHGDT4 -f O -b _ -o \"boo.txt\"\n  smw2-src-window-to-txt.py ys_koopa.asm KOOPA_WINDOW_DT -f * -i\n  smw2-src-window-to-txt.py ys_play.asm.BAK17 CCHGDN -c")
 parser.add_argument("infile", metavar="<input file>", help="Source file path.")
 parser.add_argument("label", metavar="<label>", help="Label of window table to convert in source file.")
 parser.add_argument("-o", "--outfile", metavar="<output file>", type=str, help="Destination file path. Default is \"window-to-txt/<input file>-<label>.txt\".")
 parser.add_argument("-b", "--blankchar", metavar="<blank character>", type=str, default=" ", help="Character to use for blank spaces. Default is Space.")
 parser.add_argument("-f", "--filledchar", metavar="<filled character>", type=str, default="X", help="Character to use for filled pixels. Default is X.")
 parser.add_argument("-i", "--no_invert", action='store_true', help="If included, the output will not be flipped vertically. This is needed for certain images to be output correctly.")
+parser.add_argument("-c", "--ignore_commented_out", action='store_true', help="If included, data blocks with at least one semicolon at the start of their lines will be ignored.")
 
 args = parser.parse_args()
 
@@ -64,8 +65,13 @@ src_data = load_file(args.infile)
 
 src_data_text = src_data.decode("shift_jis", "replace")		# Decode from Shift-JIS, replace values that can't be decoded with 0xFFFD
 
+if args.ignore_commented_out:
+	comment_pattern = ""	# If -c argument is set, regex will not match lines with semicolons at the beginning
+else:
+	comment_pattern = ";*"	# Otherwise, include them
+
 # Pattern for entire block of data associated with the specified window label
-pattern = args.label + "[ \\t]{1,}EQU[ \\t]{1,}\\$(?:[ \\t0-9A-Za-z\\u3040-\\u30FF\\u3400-\\u4DBF\\u4E00-\\u9FFF\\.\\;]*)\\n;*[ \\t]{1,}(?:WORD[ \\t]{1,}CIPCHD\\+[0-9A-F]{4}H\\+[0-9A-F]{4}H\\n)*;*[ \\t]{1,}HEX[ \\t]{1,}([0-9A-F]{2})\\n(?:;*[ \\t]{1,}HEX[ \\t]{1,}(?:(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1})(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1}){0,2}){1,4}(?:[ \\t]{1};\\[(?:[0-9A-F]{2})\\]){0,1}\\n){1,}"
+pattern = args.label + "[ \\t]{1,}EQU[ \\t]{1,}\\$(?:[ \\t0-9A-Za-z\\u3040-\\u30FF\\u3400-\\u4DBF\\u4E00-\\u9FFF\\.\\;]*)\\n" + comment_pattern + "[ \\t]{1,}(?:WORD[ \\t]{1,}CIPCHD\\+[0-9A-F]{4}H\\+[0-9A-F]{4}H\\n)*" + comment_pattern + "[ \\t]{1,}HEX[ \\t]{1,}([0-9A-F]{2})\\n(?:" + comment_pattern + "[ \\t]{1,}HEX[ \\t]{1,}(?:(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1})(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1}){0,2}){1,4}(?:[ \\t]{1};\\[(?:[0-9A-F]{2})\\]){0,1}\\n){1,}"
 match = re.search(pattern, src_data_text)
 
 if match:

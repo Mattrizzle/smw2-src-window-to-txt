@@ -28,9 +28,15 @@ smw2-src-window-to-txt \[-h\] \<input file\> \<label\> \[-o \<output file\>\] \[
 
   -i, --no_invert       If included, the output will not be flipped vertically. This is needed for certain images to be output correctly.
 
+  -c, --ignore_commented_out
+
+                        If included, data blocks with at least one semicolon at the start of their lines will be ignored.
+
 ### Examples:
   smw2-src-window-to-txt.py ys_play.asm.BAK1 CCHGD0
 
   smw2-src-window-to-txt.py ys_game.asm.BAK11 CHGDT4 -f O -b _ -o "boo.txt"
 
   smw2-src-window-to-txt.py ys_koopa.asm KOOPA_WINDOW_DT -f * -i
+
+  smw2-src-window-to-txt.py ys_play.asm.BAK17 CCHGDN -c
