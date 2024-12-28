@@ -81,7 +81,7 @@ else:
 	comment_pattern = ";*"	# Otherwise, include them
 
 # Pattern for entire block of data associated with the specified window label
-pattern = args.label + "[ \\t]{1,}EQU[ \\t]{1,}\\$(?:[ \\t0-9A-Za-z\\u3040-\\u30FF\\u3400-\\u4DBF\\u4E00-\\u9FFF\\.\\;]*)\\n" + comment_pattern + "[ \\t]{1,}(?:WORD[ \\t]{1,}CIPCHD\\+[0-9A-F]{4}H\\+[0-9A-F]{4}H\\n)*" + comment_pattern + "[ \\t]{1,}HEX[ \\t]{1,}([0-9A-F]{2})\\n(?:" + comment_pattern + "[ \\t]{1,}HEX[ \\t]{1,}(?:(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1})(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1}){0,2}){1,4}(?:[ \\t]{1};\\[(?:[0-9A-F]{2})\\]){0,1}\\n){1,}"
+pattern = args.label + "[ \\t]{1,}EQU[ \\t]{1,}\\$(?:[ \\t0-9A-Za-z\\u3040-\\u30FF\\u3400-\\u4DBF\\u4E00-\\u9FFF\\.\\;]*)\\n" + comment_pattern + "[ \\t]{1,}(?:WORD[ \\t]{1,}CIPCHD\\+[0-9A-F]{4}H\\+[0-9A-F]{4}H\\n)*" + comment_pattern + "[ \\t]{1,}HEX[ \\t]{1,}([0-9A-F]{2})\\n(?:" + comment_pattern + "[ \\t]{1,}HEX[ \\t]{1,}(?:(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1})(?:[0-9A-F]{2}),(?:[0-9A-F]{2})(?:,[ ]{0,1}){0,2}){1,4}(?:[ \\t]{1,};\\[(?:[0-9A-F]{2})\\]){0,1}\\n){1,}"
 match = re.search(pattern, src_data_text)
 
 if match:
