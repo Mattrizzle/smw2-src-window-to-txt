@@ -1,10 +1,10 @@
 # Yoshi's Island Source Window Data to Text Art Converter
-This script converts a window table from a Yoshi's Island source code ASM file to an 'ASCII art'-style text file. Additionally, it prints this output to the terminal window if it fits.
+This script converts a window table from a Yoshi's Island source code ASM file to an 'ASCII art'-style text file (or optionally a BMP file). Additionally, it prints this output to the terminal window if it fits.
 
 Tested with Python 3.8.5 on Windows 7.
 
 ### Usage:
-smw2-src-window-to-txt \[-h\] \<input file\> \<label\> \[-o \<output file\>\] \[-b \<blank character\>\] \[-f \<filled character\>\] \[-i\]
+smw2-src-window-to-txt \[-h\] \<input file\> \<label\> \[-o \<output file\>\] \[-b \<blank character\>\] \[-f \<filled character\>\] \[-i\] \[-c\] \[-m\]
                               
 ### Positional arguments:
   \<input file\>        Source file path.
@@ -31,6 +31,8 @@ smw2-src-window-to-txt \[-h\] \<input file\> \<label\> \[-o \<output file\>\] \[
   -c, --ignore_commented_out
 
                         If included, data blocks with at least one semicolon at the start of their lines will be ignored.
+
+  -m, --bitmap          If included, the output file will be a 3-color bitmap image instead of a text file.
 
 ### Examples:
   smw2-src-window-to-txt.py ys_play.asm.BAK1 CCHGD0
